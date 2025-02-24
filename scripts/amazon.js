@@ -4,6 +4,9 @@ Flow of Javascript:
 2. Generate the HTML
 3. Make it interactive
 */
+import {cart, addToCart} from '../data/cart.js'; //.. means to go out of the current folder
+import {products} from '../data/products.js';
+import {formatCurrency} from './utils/money.js';
 
 let productsHTML = ``;
 
@@ -32,9 +35,7 @@ products.forEach((product) => {
         }</div>
         </div>
 
-        <div class="product-price">$${(product.priceCents / 100).toFixed(
-          2
-        )}</div> <!-- .toFixed() converts number into a string toFixed(2) means to 2 dp -->
+        <div class="product-price">$${formatCurrency(product.priceCents)}</div> <!-- .toFixed() converts number into a string toFixed(2) means to 2 dp -->
 
         <div class="product-quantity-container">
         <select>
@@ -67,34 +68,23 @@ products.forEach((product) => {
 
 document.querySelector(".js-products-grid").innerHTML = productsHTML; //inserting the HTML into the DOM
 
+function updateCartQuantity() {
+  let cartQuantity = 0;
+
+    cart.forEach((cartItem) => {
+      cartQuantity += cartItem.quantity;
+    });
+
+    document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
+}
+
 document.querySelectorAll(".js-add-to-cart").forEach((button) => {
   button.addEventListener("click", () => {
     const productId = button.dataset.productId; //the kebab case will be converted to camel case (product-name become productName)
 
-    let matchingItem;
-    cart.forEach((item) => {
-      if (productId === item.productId) {
-        matchingItem = item;
-      }
-    });
+    addToCart(productId);
 
-    if (matchingItem) {
-      matchingItem.quantity++;
-    } else {
-      cart.push({
-        productId: productId,
-        quantity: 1,
-      });
-    }
+    updateCartQuantity();    
 
-    let cartQuantity = 0;
-
-    cart.forEach((item) => {
-      cartQuantity += item.quantity;
-    });
-
-    document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
-
-    console.log(cart);
   });
 });
