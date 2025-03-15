@@ -4,9 +4,9 @@ Flow of Javascript:
 2. Generate the HTML
 3. Make it interactive
 */
-import {cart, addToCart} from '../data/cart.js'; //.. means to go out of the current folder
-import {products} from '../data/products.js';
-import {formatCurrency} from './utils/money.js';
+import { cart, addToCart } from "../data/cart.js"; //.. means to go out of the current folder
+import { products } from "../data/products.js";
+import { formatCurrency } from "./utils/money.js";
 
 let productsHTML = ``;
 
@@ -28,14 +28,14 @@ products.forEach((product) => {
         <div class="product-rating-container">
         <img
             class="product-rating-stars"
-            src="images/ratings/rating-${product.rating.stars * 10}.png"
-        />
+            src="${product.getStarsUrl}"
+        >
         <div class="product-rating-count link-primary">${
           product.rating.count
         }</div>
         </div>
 
-        <div class="product-price">$${formatCurrency(product.priceCents)}</div> <!-- .toFixed() converts number into a string toFixed(2) means to 2 dp -->
+        <div class="product-price">${product.getPrice()}</div> <!-- .toFixed() converts number into a string toFixed(2) means to 2 dp -->
 
         <div class="product-quantity-container">
         <select>
@@ -71,11 +71,11 @@ document.querySelector(".js-products-grid").innerHTML = productsHTML; //insertin
 function updateCartQuantity() {
   let cartQuantity = 0;
 
-    cart.forEach((cartItem) => {
-      cartQuantity += cartItem.quantity;
-    });
+  cart.forEach((cartItem) => {
+    cartQuantity += cartItem.quantity;
+  });
 
-    document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
+  document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
 }
 
 document.querySelectorAll(".js-add-to-cart").forEach((button) => {
@@ -84,7 +84,6 @@ document.querySelectorAll(".js-add-to-cart").forEach((button) => {
 
     addToCart(productId);
 
-    updateCartQuantity();    
-
+    updateCartQuantity();
   });
 });
